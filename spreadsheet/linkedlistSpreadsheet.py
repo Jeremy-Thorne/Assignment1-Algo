@@ -67,8 +67,8 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         # TO BE IMPLEMENTED
         pass
 
-        # REPLACE WITH APPROPRIATE RETURddsadsaN VALUE
-        return Truedsad
+        # REPLACE WITH APPROPRIATE RETURN VALUE
+        return True
 
 
     def insertCol(self, colIndex: int)->bool:
