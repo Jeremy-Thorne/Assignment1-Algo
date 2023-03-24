@@ -13,9 +13,14 @@ from spreadsheet.baseSpreadsheet import BaseSpreadsheet
 class ArraySpreadsheet(BaseSpreadsheet):
 
     def __init__(self):
-        # TO BE IMPLEMENTED
-        pass
+        
+        self.spreadSheet = []
+        self.numCols = 10
+        self.numRows = 10
 
+    def printSheet(self):
+        for row in self.spreadSheet:
+            print(row)
 
     def buildSpreadsheet(self, lCells: [Cell]):
         """
@@ -23,8 +28,16 @@ class ArraySpreadsheet(BaseSpreadsheet):
         @param lCells: list of cells to be stored
         """
 
-        # TO BE IMPLEMENTED
-        pass
+        # Find largest Values if Variable
+        #for cell in lCells:
+        #    if cell.row > self.numCols: self.numCols = cell.row
+        #    if cell.col > self.numRows: self.numRows = cell.col               
+        
+        spreadsheet = [[None for i in range(self.numCols)] for j in range(self.numRows)]
+        for cell in lCells:
+            spreadsheet[cell.row][cell.col] = cell.val
+
+        self.spreadSheet = spreadsheet
 
 
     def appendRow(self)->bool:
@@ -34,11 +47,12 @@ class ArraySpreadsheet(BaseSpreadsheet):
         @return True if operation was successful, or False if not.
         """
 
-        # TO BE IMPLEMENTED
-        pass
-
-        # REPLACE WITH APPROPRIATE RETURN VALUE
-        return True
+        try:        
+            self.spreadSheet.append([None for i in range(self.numCols)])
+            self.numRows += 1 
+            return True
+        except:
+            return False
 
 
     def appendCol(self)->bool:
@@ -48,11 +62,13 @@ class ArraySpreadsheet(BaseSpreadsheet):
         @return True if operation was successful, or False if not.
         """
 
-        # TO BE IMPLEMENTED
-        pass
-
-        # REPLACE WITH APPROPRIATE RETURN VALUE
-        return True
+        try:        
+            for i in range(self.numRows): self.spreadSheet[i].append(None)  
+            self.numCols += 1             
+            return True
+        
+        except:
+            return False
 
 
     def insertRow(self, rowIndex: int)->bool:
@@ -64,11 +80,14 @@ class ArraySpreadsheet(BaseSpreadsheet):
         @return True if operation was successful, or False if not, e.g., rowIndex is invalid.
         """
 
-        # TO BE IMPLEMENTED
-        pass
-
-        # REPLACE WITH APPROPRIATE RETURN VALUE
-        return True
+        try:        
+            if rowIndex > 0:
+                self.spreadSheet.insert(rowIndex, [None for i in range(self.numCols)])
+                self.numRows += 1 
+                return True
+            return False
+        except:
+            return False
 
 
     def insertCol(self, colIndex: int)->bool:
@@ -80,11 +99,14 @@ class ArraySpreadsheet(BaseSpreadsheet):
         return True if operation was successful, or False if not, e.g., colIndex is invalid.
         """
 
-        # TO BE IMPLEMENTED
-        pass
-
-        # REPLACE WITH APPROPRIATE RETURN VALUE
-        return True
+        try:      
+            if colIndex > 0:  
+                for i in range(self.numRows): self.spreadSheet[i].insert(colIndex,None)
+                self.numCols += 1                   
+                return True
+            return False
+        except:
+            return False
 
 
     def update(self, rowIndex: int, colIndex: int, value: float) -> bool:
@@ -98,35 +120,26 @@ class ArraySpreadsheet(BaseSpreadsheet):
         @return True if cell can be updated.  False if cannot, e.g., row or column indices do not exist.
         """
 
-        # TO BE IMPLEMENTED
-        pass
-
-        # REPLACE WITH APPROPRIATE RETURN VALUE
-        return True
+        try:     
+            self.spreadSheet[rowIndex][colIndex] = value          
+            return True
+        
+        except:
+            return False
 
 
     def rowNum(self)->int:
         """
         @return Number of rows the spreadsheet has.
         """
-
-        # TO BE IMPLEMENTED
-        pass
-
-        # REPLACE WITH APPROPRIATE RETURN VALUE
-        return 0
+        return self.numRows
 
 
     def colNum(self)->int:
         """
         @return Number of column the spreadsheet has.
         """
-
-        # TO BE IMPLEMENTED
-        pass
-
-        # REPLACE WITH APPROPRIATE RETURN VALUE
-        return 0
+        return self.numCols
 
 
 
@@ -139,11 +152,15 @@ class ArraySpreadsheet(BaseSpreadsheet):
         @return List of cells (row, col) that contains the input value.
 	    """
 
-        # TO BE IMPLEMENTED
-        pass
+        cellList = []
+        for i in range(self.numRows):
+            for j in range(self.numCols):
+                currVal = self.spreadSheet[i][j]
+                if currVal == value:
+                    cellList.append([i,j,currVal])
 
-        # REPLACE WITH APPROPRIATE RETURN VALUE
-        return []
+        return cellList
+
 
 
 
@@ -152,8 +169,12 @@ class ArraySpreadsheet(BaseSpreadsheet):
         @return A list of cells that have values (i.e., all non None cells).
         """
 
-        # TO BE IMPLEMENTED
-        pass
+        cellList = []
+        for i in range(self.numRows):
+            for j in range(self.numCols):
+                currVal = self.spreadSheet[i][j]
+                if currVal != None:
+                    cellList.append(Cell(i,j,currVal))
 
-        # TO BE IMPLEMENTED
-        return []
+        return cellList
+
