@@ -23,6 +23,7 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
 
     def __init__(self):
         # TO BE IMPLEMENTED
+
         pass
 
 
@@ -33,6 +34,8 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         """
 
         # TO BE IMPLEMENTED
+
+        
         pass
 
 
