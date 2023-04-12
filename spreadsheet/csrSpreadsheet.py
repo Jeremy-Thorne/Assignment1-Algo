@@ -15,8 +15,11 @@ from spreadsheet.cell import Cell
 class CSRSpreadsheet(BaseSpreadsheet):
 
     def __init__(self):
-        # TO BE IMPLEMENTED
-        pass
+        self.numCols = 10
+        self.numRows = 10
+        self.ColA = []
+        self.ValA = []
+        self.SumA = []
 
 
     def buildSpreadsheet(self, lCells: [Cell]):
@@ -25,9 +28,22 @@ class CSRSpreadsheet(BaseSpreadsheet):
         @param lCells: list of cells to be stored
         """
 
-        # TO BE IMPLEMENTED
-        pass
+        self.ColA = []
+        self.ValA = []
+        self.SumA = []
+        cellList = []
 
+        for cell in lCells: cellList.append([cell.row, cell.col, cell.val])
+
+        cumulativeVal = 0
+        cellList = sorted(cellList)
+        for i in range(self.numRows):
+            for cell in cellList:
+                if cell[0] == i:
+                    self.ColA.append(cell[1]) 
+                    self.ValA.append(cell[2])
+                    cumulativeVal += cell[2]
+            self.SumA.append(cumulativeVal)
 
     def appendRow(self):
         """
@@ -35,10 +51,9 @@ class CSRSpreadsheet(BaseSpreadsheet):
 
         @return True if operation was successful, or False if not.
         """
-
-        # TO BE IMPLEMENTED
-        pass
-
+        self.SumA.append(self.SumA[len(self.SumA) - 1])
+        self.numRows += 1
+        return True
 
     def appendCol(self):
         """
@@ -46,9 +61,8 @@ class CSRSpreadsheet(BaseSpreadsheet):
 
         @return True if operation was successful, or False if not.
         """
-
-        # TO BE IMPLEMENTED
-        pass
+        self.numCols += 1
+        return True
 
 
     def insertRow(self, rowIndex: int)->bool:
@@ -60,10 +74,13 @@ class CSRSpreadsheet(BaseSpreadsheet):
         @return True if operation was successful, or False if not, e.g., rowIndex is invalid.
         """
 
-        # REPLACE WITH APPROPRIATE RETURN VALUE
-        return True
-
-
+        if(rowIndex > 0 and rowIndex < (self.numRows)):
+            self.SumA.insert(rowIndex, self.SumA[rowIndex])
+            self.numRows += 1
+            return True
+        else:
+            return False
+    
     def insertCol(self, colIndex: int)->bool:
         """
         Inserts an empty column into the spreadsheet.
@@ -73,10 +90,14 @@ class CSRSpreadsheet(BaseSpreadsheet):
         return True if operation was successful, or False if not, e.g., colIndex is invalid.
         """
 
-        # REPLACE WITH APPROPRIATE RETURN VALUE
-        return True
-
-
+        if(colIndex > 0 and colIndex < (self.numCols)):
+            for i in range(len(self.ColA)):
+                if self.ColA[i] > colIndex:
+                    self.ColA[i] = self.ColA[i] + 1
+            self.numCols += 1
+            return True
+        else:
+            return False
 
     def update(self, rowIndex: int, colIndex: int, value: float) -> bool:
         """
@@ -89,26 +110,49 @@ class CSRSpreadsheet(BaseSpreadsheet):
         @return True if cell can be updated.  False if cannot, e.g., row or column indices do not exist.
         """
 
-        # TO BE IMPLEMENTED
+        if(colIndex > 0 and colIndex < (self.numCols) and rowIndex > 0 and rowIndex < (self.numRows)):
+            cellList = []
+            currentSum = 0
+            valIndex = 0
+            currRow = 0
+            for i in range(len(self.SumA)):
+                while currentSum != self.SumA[i]:
+                    currentSum += self.ValA[valIndex]                     
+                    cellList.append(Cell(currRow, self.ColA[valIndex], self.ValA[valIndex]))
+                    valIndex += 1
+                currRow += 1
 
-        # REPLACE WITH APPROPRIATE RETURN VALUE
-        return True
+            index = 0
+            setIndex = 9999
+            for cell in cellList:
+                if cell.row == rowIndex and cell.col == colIndex:
+                    setIndex = index
+                index += 1
 
+            if setIndex < 9999:
+                cellList[setIndex].val = value
+            else:
+                cellList.append(Cell(rowIndex, colIndex, value))
+                       
+            self.buildSpreadsheet(cellList)               
+            return True            
+        else:
+            return False
 
     def rowNum(self)->int:
         """
         @return Number of rows the spreadsheet has.
         """
-        # TO BE IMPLEMENTED
-        return 0
+
+        return self.numRows
 
 
     def colNum(self)->int:
         """
         @return Number of column the spreadsheet has.
         """
-        # TO BE IMPLEMENTED
-        return 0
+
+        return self.numCols
 
 
 
@@ -122,10 +166,17 @@ class CSRSpreadsheet(BaseSpreadsheet):
         @return List of cells (row, col) that contains the input value.
 	    """
 
-        # TO BE IMPLEMENTED
-
-        # REPLACE WITH APPROPRIATE RETURN VALUE
-        return []
+        cellList = []
+        currentSum = 0
+        valIndex = 0
+        currRow = 0
+        for i in range(len(self.SumA)):
+            while currentSum != self.SumA[i]:
+                currentSum += self.ValA[valIndex]
+                if self.ValA[valIndex] == value: cellList.append([currRow, self.ColA[valIndex], value])
+                valIndex += 1
+            currRow += 1            
+        return cellList
 
 
 
@@ -135,4 +186,15 @@ class CSRSpreadsheet(BaseSpreadsheet):
         return a list of cells that have values (i.e., all non None cells).
         """
 
-        return []
+        cellList = []
+        currentSum = 0
+        valIndex = 0
+        currRow = 0
+        for i in range(len(self.SumA)):
+            while currentSum != self.SumA[i]:
+                currentSum += self.ValA[valIndex]                     
+                cellList.append(Cell(currRow, self.ColA[valIndex], self.ValA[valIndex]))
+                valIndex += 1
+            currRow += 1
+
+        return cellList

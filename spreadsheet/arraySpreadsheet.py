@@ -26,12 +26,7 @@ class ArraySpreadsheet(BaseSpreadsheet):
         """
         Construct the data structure to store nodes.
         @param lCells: list of cells to be stored
-        """
-
-        # Find largest Values if Variable
-        #for cell in lCells:
-        #    if cell.row > self.numCols: self.numCols = cell.row
-        #    if cell.col > self.numRows: self.numRows = cell.col               
+        """           
         
         spreadsheet = [[None for i in range(self.numCols)] for j in range(self.numRows)]
         for cell in lCells:
@@ -65,8 +60,7 @@ class ArraySpreadsheet(BaseSpreadsheet):
         try:        
             for i in range(self.numRows): self.spreadSheet[i].append(None)  
             self.numCols += 1             
-            return True
-        
+            return True      
         except:
             return False
 
