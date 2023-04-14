@@ -5,6 +5,7 @@ from spreadsheet.arraySpreadsheet import ArraySpreadsheet
 from spreadsheet.linkedlistSpreadsheet import LinkedListSpreadsheet
 from spreadsheet.csrSpreadsheet import CSRSpreadsheet
 
+import time
 
 # -------------------------------------------------------------------
 # DON'T CHANGE THIS FILE.
@@ -30,6 +31,7 @@ def usage():
 
 
 if __name__ == '__main__':
+    start = time.time()
     # Fetch the command line arguments
     args = sys.argv
 
@@ -154,3 +156,7 @@ if __name__ == '__main__':
     except FileNotFoundError as e:
         print("Command file doesn't exist.")
         usage()
+
+    end = time.time()
+    total_time = end - start
+    print("\n"+ str(total_time))
