@@ -15,8 +15,8 @@ class ArraySpreadsheet(BaseSpreadsheet):
     def __init__(self):
         
         self.spreadSheet = []
-        self.numCols = 10
-        self.numRows = 10
+        self.numCols = 0
+        self.numRows = 0
 
     def printSheet(self):
         for row in self.spreadSheet:
@@ -28,12 +28,15 @@ class ArraySpreadsheet(BaseSpreadsheet):
         @param lCells: list of cells to be stored
         """           
         
+        for cell in lCells:
+            if cell.row > self.numRows: self.numRows = cell.row
+            if cell.col > self.numCols: self.numCols = cell.col
+            
         spreadsheet = [[None for i in range(self.numCols)] for j in range(self.numRows)]
         for cell in lCells:
-            spreadsheet[cell.row][cell.col] = cell.val
+            spreadsheet[cell.row-1][cell.col-1] = cell.val
 
         self.spreadSheet = spreadsheet
-
 
     def appendRow(self)->bool:
         """
