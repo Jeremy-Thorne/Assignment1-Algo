@@ -7,13 +7,11 @@ class ListNode:
     Define a node in the linked list
     '''
 
-    def __init__(self, word_frequency: float):
+    def __init__(self, val: float):
 
-        self.left = None
+        self.down = None
         self.right = None
-        self.up = None
-        self.down  = None
-        self.word_frequency = word_frequency
+        self.val = val
 
 # ------------------------------------------------------------------------
 # This class  is required TO BE IMPLEMENTED
@@ -26,12 +24,20 @@ class ListNode:
 class LinkedListSpreadsheet(BaseSpreadsheet):
 
     def __init__(self):
-        # TO BE IMPLEMENTED
         self.rows = 0
         self.cols = 0
         self.head = ListNode(None)
-        self.tail = ListNode(None)
-        self.linkedListSpreadsheet = ListNode(None)
+
+    def printSheet(self):
+        currRow = self.head
+        for i in range(self.rows+1):
+            currCol = currRow
+            for j in range(self.cols):
+                print(currCol.val, end=' ')
+                currCol = currCol.right
+            currRow = currRow.down
+
+            print()
 
 
     def buildSpreadsheet(self, lCells: [Cell]):
@@ -40,68 +46,47 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @param lCells: list of cells to be stored
         """
 
-        # TO BE IMPLEMENTED
         for cell in lCells:
-            if cell.row > self.rows: 
-                self.rows = cell.row + 1 
+            if cell.row > self.rows: self.rows = cell.row
+            if cell.col > self.cols: self.cols = cell.col
 
-            if cell.col > self.cols: 
-                self.cols = cell.col + 1
+        currNode = self.head
+        for i in range(self.rows):   
 
-        self.linkedListSpreadsheet = [[ListNode(None) for j in range(self.cols)] for i in range(self.rows)]
+            currNode.down = ListNode(None)
+            currColNode = currNode
+            currNode = currNode.down
+
+            for j in range(self.cols):
+                currColNode.right = ListNode(None)
+                currColNode = currColNode.right
 
         for cell in lCells:
-           node = self.linkedListSpreadsheet[cell.row - 1][cell.col - 1]
-           node.word_frequency = cell.val
+            currNode = self.head
+            for i in range(cell.row-1):
+                currNode = currNode.down
 
-        for rows in range(self.rows):
-            for cols in range(self.cols):
-                node = self.linkedListSpreadsheet[rows][cols]
-
-                if rows > 0:
-                    node.up = self.linkedListSpreadsheet[rows - 1][cols]
-
-                if rows < self.rows - 1:
-                    node.down = self.linkedListSpreadsheet[rows + 1][cols]
-
-                if cols > 0:
-                    node.left = self.linkedListSpreadsheet[rows][cols - 1]
-
-                if cols < self.cols - 1:
-                    node.right = self.linkedListSpreadsheet[rows][cols + 1]
-
-        self.head = self.linkedListSpreadsheet[0][0]
-        self.tail = self.linkedListSpreadsheet[self.rows - 1][self.cols - 1]
-
+            for j in range(cell.col-1):
+                currNode = currNode.right
+            currNode.val = cell.val
 
     def appendRow(self):
         """
         Appends an empty row to the spreadsheet.
         """
 
-        # TO BE IMPLEMENTED
-        try:
-            new_row = [ListNode(None) for i in range(self.cols)]
+        currNode = self.head
+        for i in range(self.rows):
+            currNode = currNode.down
 
-            for i in range(self.cols):
-                node = new_row[i]
+        currNode.down = ListNode(None)
+        currNode = currNode.down
 
-                if i > 0:
-                    node.left = new_row[i - 1]
-
-                if i < self.cols - 1:
-                    node.right = new_row[i + 1]
-
-                if len(self.linkedListSpreadsheet) > 0:
-                    node.up = self.linkedListSpreadsheet[-1][i]
-                    self.linkedListSpreadsheet[-1][i].down = node
-
-            self.linkedListSpreadsheet.append(new_row)
-            self.rows += 1
-            return True
+        for j in range(self.cols):
+            currNode.right = ListNode(None)
+            currNode = currNode.right
         
-        except:
-            return False
+        return True
 
 
     def appendCol(self):
@@ -110,30 +95,9 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
 
         @return True if operation was successful, or False if not.
         """
-        # TO BE IMPLEMENTED
-        try:
-            new_col = [ListNode(None) for j in range(self.rows)]
 
-            for j in range(self.rows):
-                node = new_col[j]
 
-                if j > 0:
-                    node.up = self.linkedListSpreadsheet[j - 1][self.cols - 1]
-                    self.linkedListSpreadsheet[j - 1][self.cols - 1].down = node
-
-                if j < self.rows - 1:
-                    node.down = self.linkedListSpreadsheet[j + 1][self.cols - 1]
-                    self.linkedListSpreadsheet[j + 1][self.cols - 1].up = node
-
-                node.left = self.linkedListSpreadsheet[j][self.cols - 1]
-                self.linkedListSpreadsheet[j][self.cols - 1].right = node
-            
-            self.linkedListSpreadsheet.append(new_col)
-            self.cols += 1
-            return True
-        
-        except:
-            return False
+        return True
 
 
     def insertRow(self, rowIndex: int)->bool:
@@ -145,18 +109,8 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @return True if operation was successful, or False if not, e.g., rowIndex is invalid.
         """
 
-        # TO BE IMPLEMENTED
-        try:        
-            if rowIndex > 0:
-                self.linkedListSpreadsheet.insert(rowIndex, [ListNode(None) for i in range(self.cols)])
-                self.rows += 1
-                return True
-            
-            else:
-                return False
-            
-        except:
-            return False
+
+        return False
 
 
     def insertCol(self, colIndex: int)->bool:
@@ -166,20 +120,7 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @param colIndex Index of the existing column that will be before the newly inserted row.  If inserting as first column, specify colIndex to be -1.
         """
 
-        # TO BE IMPLEMENTED
-        try:      
-            if colIndex > 0:  
-
-                for i in range(self.rows): 
-                    self.linkedListSpreadsheet[i].insert(colIndex, ListNode(None))
-
-                self.cols += 1                   
-                return True
-            
-            return False
-        
-        except:
-            return False
+        return False
 
 
     def update(self, rowIndex: int, colIndex: int, value: float) -> bool:
@@ -193,15 +134,9 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @return True if cell can be updated.  False if cannot, e.g., row or column indices do not exist.
         """
 
-        # TO BE IMPLEMENTED
-        if rowIndex > self.rows or colIndex > self.cols:
-            return False
-        
-        try:
-            self.linkedListSpreadsheet[rowIndex - 1][colIndex - 1].word_frequency = value
+        if rowIndex < self.rows or colIndex < self.cols:
             return True
-        
-        except:
+        else:
             return False
 
 
@@ -210,7 +145,6 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @return Number of rows the spreadsheet has.
         """
 
-        # TO BE IMPLEMENTED
         return self.rows
 
 
@@ -219,7 +153,6 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @return Number of column the spreadsheet has.
         """
 
-        # TO BE IMPLEMENTED
         return self.cols
 
 
@@ -232,15 +165,9 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @return List of cells (row, col) that contains the input value.
 	    """
         
-        # TO BE IMPLEMENTED
         cellList = []
 
-        for i in range(self.rows):
-            for j in range(self.cols):
-                currVal = self.linkedListSpreadsheet[i - 1][j - 1].word_frequency
 
-                if currVal == value:
-                    cellList.append([i, j, currVal])
 
         return cellList
 
@@ -250,14 +177,7 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @return A list of cells that have values (i.e., all non None cells).
         """
 
-        # TO BE IMPLEMENTED
         cellList = []
 
-        for i in range(self.rows - 1):
-            for j in range(self.cols - 1):
-                currVal = self.linkedListSpreadsheet[i][j].word_frequency
-
-                if currVal is not None:
-                    cellList.append(Cell(i + 1, j + 1, currVal))
 
         return cellList

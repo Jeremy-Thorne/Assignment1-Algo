@@ -15,12 +15,16 @@ from spreadsheet.cell import Cell
 class CSRSpreadsheet(BaseSpreadsheet):
 
     def __init__(self):
-        self.numCols = 10
-        self.numRows = 10
+        self.numCols = 0
+        self.numRows = 0
         self.ColA = []
         self.ValA = []
         self.SumA = []
 
+    def printSheet(self):
+        print(self.ColA,
+                self.ValA,
+                self.SumA)
 
     def buildSpreadsheet(self, lCells: [Cell]):
         """
@@ -32,6 +36,10 @@ class CSRSpreadsheet(BaseSpreadsheet):
         self.ValA = []
         self.SumA = []
         cellList = []
+
+        for cell in lCells:
+            if cell.row > self.numRows: self.numRows = cell.row
+            if cell.col > self.numCols: self.numCols = cell.col
 
         for cell in lCells: cellList.append([cell.row, cell.col, cell.val])
 

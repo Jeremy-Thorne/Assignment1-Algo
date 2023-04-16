@@ -31,7 +31,8 @@ def usage():
 
 
 if __name__ == '__main__':
-    start = time.time()
+    # start = time.time()
+    
     # Fetch the command line arguments
     args = sys.argv
 
@@ -157,6 +158,10 @@ if __name__ == '__main__':
         print("Command file doesn't exist.")
         usage()
 
-    end = time.time()
-    total_time = end - start
-    print("\n"+ str(total_time))
+    # end = time.time()
+    # total_time = end - start
+    # #print("\n"+ str(total_time))
+    # import totalCalc as TC
+
+    # TC.record(total_time)
+    spreadsheet.printSheet()
