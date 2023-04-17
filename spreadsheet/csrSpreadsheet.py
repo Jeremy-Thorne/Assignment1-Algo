@@ -38,8 +38,8 @@ class CSRSpreadsheet(BaseSpreadsheet):
         cellList = []
 
         for cell in lCells:
-            if cell.row > self.numRows: self.numRows = cell.row
-            if cell.col > self.numCols: self.numCols = cell.col
+            if cell.row > self.numRows: self.numRows = cell.row + 1
+            if cell.col > self.numCols: self.numCols = cell.col + 1
 
         for cell in lCells: cellList.append([cell.row, cell.col, cell.val])
 
@@ -119,31 +119,46 @@ class CSRSpreadsheet(BaseSpreadsheet):
         """
 
         if(colIndex > 0 and colIndex < (self.numCols) and rowIndex > 0 and rowIndex < (self.numRows)):
-            cellList = []
             currentSum = 0
             valIndex = 0
-            currRow = 0
+            rowCount = 0
             for i in range(len(self.SumA)):
                 while currentSum != self.SumA[i]:
-                    currentSum += self.ValA[valIndex]                     
-                    cellList.append(Cell(currRow, self.ColA[valIndex], self.ValA[valIndex]))
+                    currentSum += self.ValA[valIndex]
                     valIndex += 1
-                currRow += 1
+                    if i == rowIndex:
+                        valIndex -= 1
+                        rowCount += 1
+                if i == rowIndex - 1:
+                    break        
+            while True:
+                if valIndex >= len(self.ColA):
+                    self.ColA.append(colIndex)
+                    self.ValA.append(value)
+                    for index, sum in enumerate(self.SumA):
+                        if index >= rowIndex:
+                            self.SumA[index] += value
+                    break
+                if colIndex == self.ColA[valIndex]:
+                    self.SumA[rowIndex] += value - self.ValA[valIndex] 
+                    for index, sum in enumerate(self.SumA):
+                        if index > rowIndex:
+                            self.SumA[index] = self.SumA[index] + (value - self.ValA[valIndex])
+                    self.ColA[valIndex] = colIndex
+                    self.ValA[valIndex] = value               
+                    break
+                if colIndex < self.ColA[valIndex] or rowCount <= 0:
+                    for index, sum in enumerate(self.SumA):
+                        if index >= rowIndex:
+                            self.SumA[index] += value
+                    self.ColA.insert(valIndex, colIndex)
+                    self.ValA.insert(valIndex, value)
+                    break
 
-            index = 0
-            setIndex = 9999
-            for cell in cellList:
-                if cell.row == rowIndex and cell.col == colIndex:
-                    setIndex = index
-                index += 1
+                colIndex += 1
+                rowCount -= 1
 
-            if setIndex < 9999:
-                cellList[setIndex].val = value
-            else:
-                cellList.append(Cell(rowIndex, colIndex, value))
-                       
-            self.buildSpreadsheet(cellList)               
-            return True            
+            return True
         else:
             return False
 
@@ -193,7 +208,7 @@ class CSRSpreadsheet(BaseSpreadsheet):
         """
         return a list of cells that have values (i.e., all non None cells).
         """
-
+        
         cellList = []
         currentSum = 0
         valIndex = 0

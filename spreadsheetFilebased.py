@@ -5,8 +5,6 @@ from spreadsheet.arraySpreadsheet import ArraySpreadsheet
 from spreadsheet.linkedlistSpreadsheet import LinkedListSpreadsheet
 from spreadsheet.csrSpreadsheet import CSRSpreadsheet
 
-import time
-
 # -------------------------------------------------------------------
 # DON'T CHANGE THIS FILE.
 # This is the entry point to run the program in file-based mode.
@@ -30,9 +28,7 @@ def usage():
     sys.exit(1)
 
 
-if __name__ == '__main__':
-    # start = time.time()
-    
+if __name__ == '__main__':   
     # Fetch the command line arguments
     args = sys.argv
 
@@ -158,10 +154,5 @@ if __name__ == '__main__':
         print("Command file doesn't exist.")
         usage()
 
-    # end = time.time()
-    # total_time = end - start
-    # #print("\n"+ str(total_time))
-    # import totalCalc as TC
-
-    # TC.record(total_time)
     spreadsheet.printSheet()
+

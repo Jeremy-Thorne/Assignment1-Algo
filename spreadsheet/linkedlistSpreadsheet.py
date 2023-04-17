@@ -11,6 +11,8 @@ class ListNode:
 
         self.down = None
         self.right = None
+        self.up = None
+        self.left = None
         self.val = val
 
 # ------------------------------------------------------------------------
@@ -30,9 +32,9 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
 
     def printSheet(self):
         currRow = self.head
-        for i in range(self.rows+1):
+        while currRow is not None:
             currCol = currRow
-            for j in range(self.cols):
+            while currCol is not None:
                 print(currCol.val, end=' ')
                 currCol = currCol.right
             currRow = currRow.down
@@ -47,26 +49,28 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         """
 
         for cell in lCells:
-            if cell.row > self.rows: self.rows = cell.row
-            if cell.col > self.cols: self.cols = cell.col
+            if cell.row > self.rows: self.rows = cell.row + 1
+            if cell.col > self.cols: self.cols = cell.col + 1
 
         currNode = self.head
         for i in range(self.rows):   
 
             currNode.down = ListNode(None)
             currColNode = currNode
-            currNode = currNode.down
+            currNode.down.up = currNode
+            currNode = currNode.down     
 
-            for j in range(self.cols):
+            for j in range(self.cols-1):
                 currColNode.right = ListNode(None)
+                currColNode.right.left = currColNode 
                 currColNode = currColNode.right
 
         for cell in lCells:
             currNode = self.head
-            for i in range(cell.row-1):
+            for i in range(cell.row):
                 currNode = currNode.down
 
-            for j in range(cell.col-1):
+            for j in range(cell.col):
                 currNode = currNode.right
             currNode.val = cell.val
 
@@ -76,16 +80,17 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         """
 
         currNode = self.head
-        for i in range(self.rows):
+        for i in range(self.rows-1):
             currNode = currNode.down
 
         currNode.down = ListNode(None)
         currNode = currNode.down
 
-        for j in range(self.cols):
+        for j in range(self.cols-1):
             currNode.right = ListNode(None)
+            currNode.right.left = currNode
             currNode = currNode.right
-        
+        self.rows +=1
         return True
 
 
@@ -96,7 +101,15 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @return True if operation was successful, or False if not.
         """
 
-
+        rowNode = self.head
+        while rowNode is not None:
+            currNode = rowNode
+            while currNode.right is not None:
+                currNode = currNode.right
+            currNode.right = ListNode(None)
+            currNode.right.left = currNode
+            rowNode = rowNode.down
+        self.cols +=1
         return True
 
 
@@ -109,9 +122,40 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @return True if operation was successful, or False if not, e.g., rowIndex is invalid.
         """
 
+        if rowIndex > 0 and rowIndex < self.rows:
+            currNode = self.head
+            for i in range(rowIndex):
+                currNode = currNode.down
+            tempUp = currNode.up
+            currNode.up = ListNode(None)
+            currNode.up.down = currNode
+            currNode.up.up = tempUp
+            if tempUp is not None:
+                tempUp.down = currNode.up
+            else:
+                tempUp = ListNode(2)
+            currNode = currNode.up
+            self.rows +=1
+            for j in range(self.cols-1):
+                currNode.right = ListNode(None)
+                currNode.right.left = currNode 
+                currNode = currNode.right
+            return True
+        
+        elif rowIndex == 0:
+            currNode = self.head
+            currNode.up = ListNode(None)
+            currNode.up.down = currNode
+            currNode = currNode.up
+
+            for j in range(self.cols-1):
+                currNode.right = ListNode(None)
+                currNode.right.left = currNode 
+                currNode = currNode.right
+            self.rows +=1
+            return True
 
         return False
-
 
     def insertCol(self, colIndex: int)->bool:
         """
@@ -120,7 +164,19 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @param colIndex Index of the existing column that will be before the newly inserted row.  If inserting as first column, specify colIndex to be -1.
         """
 
-        return False
+        rowNode = self.head
+        while rowNode is not None:
+            currNode = rowNode
+            for i in range(colIndex-1):
+                currNode = currNode.right
+            tempLeft = currNode.left
+            currNode.left = ListNode(None)
+            currNode.left.right = currNode
+            if tempLeft is not None:
+                tempLeft.right = currNode.left
+            rowNode = rowNode.down
+        self.cols +=1
+        return True
 
 
     def update(self, rowIndex: int, colIndex: int, value: float) -> bool:
@@ -134,7 +190,13 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @return True if cell can be updated.  False if cannot, e.g., row or column indices do not exist.
         """
 
-        if rowIndex < self.rows or colIndex < self.cols:
+        if rowIndex >= 0 and rowIndex < self.rows and colIndex >= 0 and colIndex < self.cols:
+            currNode = self.head
+            for i in range(rowIndex):
+                currNode = currNode.down
+            for i in range(colIndex):
+                currNode = currNode.right
+            currNode.val = value
             return True
         else:
             return False
@@ -167,8 +229,18 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         
         cellList = []
 
-
-
+        rowCount = 0
+        currRow = self.head
+        while currRow is not None:
+            colCount = 0
+            currCol = currRow
+            while currCol is not None:
+                if currCol.val == value or (value == -0.123456789 and currCol.val is not None):
+                    cellList.append([rowCount,colCount,currCol.val])
+                currCol = currCol.right
+                colCount += 1
+            currRow = currRow.down
+            rowCount += 1
         return cellList
 
 
@@ -179,5 +251,6 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
 
         cellList = []
 
+        for cell in self.find(-0.123456789): cellList.append(Cell(cell[0], cell[1], cell[2]))
 
         return cellList

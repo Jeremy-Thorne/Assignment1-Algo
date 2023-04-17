@@ -1,3 +1,22 @@
-0.0
-1
-0.0
+
+
+array density0.05:
+Time taken for data size - 100: 0.0066
+Time taken for data size - 250: 0.0101
+Time taken for data size - 500: 0.016
+Time taken for data size - 1000: 0.0263
+Time taken for data size - 2500: 0.0488
+
+array density0.5:
+Time taken for data size - 100: 0.0419
+Time taken for data size - 250: 0.0379
+Time taken for data size - 500: 0.0366
+Time taken for data size - 1000: 0.0384
+Time taken for data size - 2500: 0.0486
+
+array density1:
+Time taken for data size - 100: 0.0447
+Time taken for data size - 250: 0.0422
+Time taken for data size - 500: 0.041
+Time taken for data size - 1000: 0.0418
+Time taken for data size - 2500: 0.0482

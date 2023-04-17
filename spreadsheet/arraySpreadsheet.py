@@ -29,12 +29,18 @@ class ArraySpreadsheet(BaseSpreadsheet):
         """           
         
         for cell in lCells:
-            if cell.row > self.numRows: self.numRows = cell.row
-            if cell.col > self.numCols: self.numCols = cell.col
+            if cell.row > self.numRows: self.numRows = cell.row + 1
+            if cell.col > self.numCols: self.numCols = cell.col + 1
             
         spreadsheet = [[None for i in range(self.numCols)] for j in range(self.numRows)]
-        for cell in lCells:
-            spreadsheet[cell.row-1][cell.col-1] = cell.val
+        
+        try:
+            for cell in lCells:
+                spreadsheet[cell.row][cell.col] = cell.val
+        except BaseException as e:
+            print(e)
+            print(len(spreadsheet))
+            print("error",cell.row, cell.col)
 
         self.spreadSheet = spreadsheet
 
