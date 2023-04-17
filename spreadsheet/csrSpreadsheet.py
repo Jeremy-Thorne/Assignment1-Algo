@@ -53,6 +53,8 @@ class CSRSpreadsheet(BaseSpreadsheet):
                     cumulativeVal += cell[2]
             self.SumA.append(cumulativeVal)
 
+        self.printSheet()
+
     def appendRow(self):
         """
         Appends an empty row to the spreadsheet.

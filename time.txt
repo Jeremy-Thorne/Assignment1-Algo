@@ -1,22 +1,36 @@
 
+array - density -0.05:
+Time taken for data size - 100: 0.0016
+Time taken for data size - 250: 0.002
+Time taken for data size - 500: 0.0028
+Time taken for data size - 1000: 0.0041
+Time taken for data size - 2500: 0.0074
+Time taken for data size - 5000: 0.0121
+Time taken for data size - 10000: 0.0201
+Time taken for data size - 25000: 0.0366
+Time taken for data size - 50000: 0.0682
+Time taken for data size - 100000: 0.1256
 
-array density0.05:
-Time taken for data size - 100: 0.0066
-Time taken for data size - 250: 0.0101
-Time taken for data size - 500: 0.016
-Time taken for data size - 1000: 0.0263
-Time taken for data size - 2500: 0.0488
+array - density -0.5:
+Time taken for data size - 100: 0.1144
+Time taken for data size - 250: 0.1052
+Time taken for data size - 500: 0.0978
+Time taken for data size - 1000: 0.0919
+Time taken for data size - 2500: 0.0878
+Time taken for data size - 5000: 0.0862
+Time taken for data size - 10000: 0.0881
+Time taken for data size - 25000: 0.0999
+Time taken for data size - 50000: 0.1282
+Time taken for data size - 100000: 0.1908
 
-array density0.5:
-Time taken for data size - 100: 0.0419
-Time taken for data size - 250: 0.0379
-Time taken for data size - 500: 0.0366
-Time taken for data size - 1000: 0.0384
-Time taken for data size - 2500: 0.0486
-
-array density1:
-Time taken for data size - 100: 0.0447
-Time taken for data size - 250: 0.0422
-Time taken for data size - 500: 0.041
-Time taken for data size - 1000: 0.0418
-Time taken for data size - 2500: 0.0482
+array - density -0.95:
+Time taken for data size - 100: 0.182
+Time taken for data size - 250: 0.1742
+Time taken for data size - 500: 0.1676
+Time taken for data size - 1000: 0.1623
+Time taken for data size - 2500: 0.1599
+Time taken for data size - 5000: 0.1623
+Time taken for data size - 10000: 0.1745
+Time taken for data size - 25000: 0.2176
+Time taken for data size - 50000: 0.3093
+Time taken for data size - 100000: 0.4915
