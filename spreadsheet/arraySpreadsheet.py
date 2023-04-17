@@ -29,20 +29,31 @@ class ArraySpreadsheet(BaseSpreadsheet):
         """           
         
         for cell in lCells:
-            if cell.row > self.numRows: self.numRows = cell.row + 1
-            if cell.col > self.numCols: self.numCols = cell.col + 1
+            if cell.row > self.numRows:
+                self.numRows = cell.row + 1
+            if cell.col > self.numCols: 
+                self.numCols = cell.col + 1
+
+        self.numRows += 1
+        self.numCols += 1
             
-        spreadsheet = [[None for i in range(self.numCols)] for j in range(self.numRows)]
+        #spreadsheet = [[None for i in range(self.numCols)] for j in range(self.numRows)]
+ 
+        for i in range(self.numRows):
+            col = []
+            for j in range(self.numCols):
+                col.append(None)
+            self.spreadSheet.append(col)
+            
         
         try:
             for cell in lCells:
-                spreadsheet[cell.row][cell.col] = cell.val
+                self.spreadSheet[cell.row][cell.col] = cell.val
         except BaseException as e:
             print(e)
-            print(len(spreadsheet))
+            print(len(self.spreadSheet), self.numRows, len(self.spreadSheet[0]), self.numCols)
             print("error",cell.row, cell.col)
 
-        self.spreadSheet = spreadsheet
 
     def appendRow(self)->bool:
         """

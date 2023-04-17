@@ -154,5 +154,3 @@ if __name__ == '__main__':
         print("Command file doesn't exist.")
         usage()
 
-    spreadsheet.printSheet()
-

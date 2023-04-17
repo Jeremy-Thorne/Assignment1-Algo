@@ -16,11 +16,13 @@ def createFiles(density):
             for i in range(size):
                 for j in range(10):
                     num = round(random.random(), 2)
-                    if num > density: 
-                        pass
+                    if num > density:                        
+                        break
                     else:
+                        print(num)
                         string = str(i) + " " + str(j) + " " + str(round(random.random(), 2)) + "\n"
                         f.write(string)
+        break
 def runTest():
     try:
         stdout = subprocess.run(["python", path + "spreadsheetFilebasedTesting.py", 
@@ -33,9 +35,9 @@ def runTest():
     print(stdout)
 
 if __name__ == '__main__':
-    createFiles(0.5)
-    runTest()
-    exit()
+    #createFiles(0.1)
+    # runTest()
+    # exit()
     for l in range(len(typeList)):
         #for k in range(len(densityList)):
             #createFiles(densityList[k])

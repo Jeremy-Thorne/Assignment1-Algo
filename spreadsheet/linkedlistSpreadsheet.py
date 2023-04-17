@@ -49,8 +49,8 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         """
 
         for cell in lCells:
-            if cell.row > self.rows: self.rows = cell.row + 1
-            if cell.col > self.cols: self.cols = cell.col + 1
+            if cell.row > self.rows: self.rows = cell.row
+            if cell.col > self.cols: self.cols = cell.col
 
         currNode = self.head
         for i in range(self.rows):   
@@ -164,18 +164,21 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @param colIndex Index of the existing column that will be before the newly inserted row.  If inserting as first column, specify colIndex to be -1.
         """
 
-        rowNode = self.head
-        while rowNode is not None:
-            currNode = rowNode
-            for i in range(colIndex-1):
-                currNode = currNode.right
-            tempLeft = currNode.left
-            currNode.left = ListNode(None)
-            currNode.left.right = currNode
-            if tempLeft is not None:
-                tempLeft.right = currNode.left
-            rowNode = rowNode.down
-        self.cols +=1
+        try:
+            rowNode = self.head
+            while rowNode is not None:
+                currNode = rowNode
+                for i in range(colIndex-1):
+                    currNode = currNode.right
+                tempLeft = currNode.left
+                currNode.left = ListNode(None)
+                currNode.left.right = currNode
+                if tempLeft is not None:
+                    tempLeft.right = currNode.left
+                rowNode = rowNode.down
+            self.cols +=1
+        except:
+            self.printSheet()
         return True
 
 
