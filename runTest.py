@@ -8,7 +8,7 @@ path = "C:/Users/Jeremy/Documents/Assignment1-Algo/Assignment1-Algo/"
 sizeList = [100,250,500,1000,2500,5000,10000,25000,50000,100000]
 densityList = [0.05, 0.5, 0.95]
 timesList = []
-typeList = ["array", "linkedList", "csr"]
+typeList = ["array", "linkedlist", "csr"]
 
 def createFiles(density):
     for size in sizeList:
@@ -19,10 +19,8 @@ def createFiles(density):
                     if num > density:                        
                         break
                     else:
-                        print(num)
-                        string = str(i) + " " + str(j) + " " + str(round(random.random(), 2)) + "\n"
+                        string = str(int(random.random() * size)) + " " + str(int(random.random() * 10)) + " " + str(round(random.random(), 2)) + "\n"
                         f.write(string)
-        break
 def runTest():
     try:
         stdout = subprocess.run(["python", path + "spreadsheetFilebasedTesting.py", 
@@ -35,7 +33,7 @@ def runTest():
     print(stdout)
 
 if __name__ == '__main__':
-    #createFiles(0.1)
+    #createFiles(0.2)
     # runTest()
     # exit()
     for l in range(len(typeList)):

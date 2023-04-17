@@ -49,8 +49,8 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         """
 
         for cell in lCells:
-            if cell.row > self.rows: self.rows = cell.row
-            if cell.col > self.cols: self.cols = cell.col
+            if cell.row > self.rows: self.rows = cell.row + 1
+            if cell.col > self.cols: self.cols = cell.col + 1
 
         currNode = self.head
         for i in range(self.rows):   
