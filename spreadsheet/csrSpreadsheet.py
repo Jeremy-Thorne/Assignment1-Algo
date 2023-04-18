@@ -25,6 +25,10 @@ class CSRSpreadsheet(BaseSpreadsheet):
         print(self.ColA,
                 self.ValA,
                 self.SumA)
+        
+    def roundSum(self):
+        for i in range(len(self.SumA)):
+            self.SumA[i] = round(self.SumA[i], 2)
 
     def buildSpreadsheet(self, lCells: [Cell]):
         """
@@ -52,8 +56,7 @@ class CSRSpreadsheet(BaseSpreadsheet):
                     self.ValA.append(cell[2])
                     cumulativeVal += cell[2]
             self.SumA.append(cumulativeVal)
-
-        self.printSheet()
+        self.roundSum()
 
     def appendRow(self):
         """
@@ -83,10 +86,11 @@ class CSRSpreadsheet(BaseSpreadsheet):
 
         @return True if operation was successful, or False if not, e.g., rowIndex is invalid.
         """
-
+        self.roundSum()
         if(rowIndex > 0 and rowIndex < (self.numRows)):
             self.SumA.insert(rowIndex, self.SumA[rowIndex])
             self.numRows += 1
+            self.roundSum()
             return True
         else:
             return False
@@ -99,12 +103,13 @@ class CSRSpreadsheet(BaseSpreadsheet):
 
         return True if operation was successful, or False if not, e.g., colIndex is invalid.
         """
-
+        self.roundSum()
         if(colIndex > 0 and colIndex < (self.numCols)):
             for i in range(len(self.ColA)):
                 if self.ColA[i] > colIndex:
                     self.ColA[i] = self.ColA[i] + 1
             self.numCols += 1
+            self.roundSum()
             return True
         else:
             return False
@@ -119,20 +124,20 @@ class CSRSpreadsheet(BaseSpreadsheet):
 
         @return True if cell can be updated.  False if cannot, e.g., row or column indices do not exist.
         """
-
+        self.roundSum()
         if(colIndex > 0 and colIndex < (self.numCols) and rowIndex > 0 and rowIndex < (self.numRows)):
             currentSum = 0
             valIndex = 0
             rowCount = 0
             for i in range(len(self.SumA)):
-                while currentSum != self.SumA[i]:
+                while round(currentSum, 2) != self.SumA[i]:
                     currentSum += self.ValA[valIndex]
                     valIndex += 1
                     if i == rowIndex:
                         valIndex -= 1
                         rowCount += 1
                 if i == rowIndex - 1:
-                    break        
+                    break
             while True:
                 if valIndex >= len(self.ColA):
                     self.ColA.append(colIndex)
@@ -156,10 +161,9 @@ class CSRSpreadsheet(BaseSpreadsheet):
                     self.ColA.insert(valIndex, colIndex)
                     self.ValA.insert(valIndex, value)
                     break
-
                 colIndex += 1
                 rowCount -= 1
-
+            self.roundSum()
             return True
         else:
             return False
@@ -196,11 +200,11 @@ class CSRSpreadsheet(BaseSpreadsheet):
         valIndex = 0
         currRow = 0
         for i in range(len(self.SumA)):
-            while currentSum != self.SumA[i]:
+            while round(currentSum, 2) != self.SumA[i]:
                 currentSum += self.ValA[valIndex]
                 if self.ValA[valIndex] == value: cellList.append([currRow, self.ColA[valIndex], value])
                 valIndex += 1
-            currRow += 1            
+            currRow += 1         
         return cellList
 
 
@@ -216,7 +220,7 @@ class CSRSpreadsheet(BaseSpreadsheet):
         valIndex = 0
         currRow = 0
         for i in range(len(self.SumA)):
-            while currentSum != self.SumA[i]:
+            while round(currentSum, 2) != self.SumA[i]:
                 currentSum += self.ValA[valIndex]                     
                 cellList.append(Cell(currRow, self.ColA[valIndex], self.ValA[valIndex]))
                 valIndex += 1

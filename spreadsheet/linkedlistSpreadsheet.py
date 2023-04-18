@@ -1,5 +1,6 @@
 from spreadsheet.baseSpreadsheet import BaseSpreadsheet
 from spreadsheet.cell import Cell
+from operator import itemgetter
 
 
 class ListNode:
@@ -32,10 +33,10 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
 
     def printSheet(self):
         currRow = self.head
-        while currRow is not None:
+        while currRow.down is not None:
             currCol = currRow
             while currCol is not None:
-                print(currCol.val, end=' ')
+                print(currCol.val, end=' ')              
                 currCol = currCol.right
             currRow = currRow.down
 
@@ -54,7 +55,6 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
 
         currNode = self.head
         for i in range(self.rows):   
-
             currNode.down = ListNode(None)
             currColNode = currNode
             currNode.down.up = currNode
@@ -64,23 +64,45 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
                 currColNode.right = ListNode(None)
                 currColNode.right.left = currColNode 
                 currColNode = currColNode.right
-
+        
+        cellList = []
         for cell in lCells:
-            currNode = self.head
-            for i in range(cell.row):
-                currNode = currNode.down
+            cellList.append([cell.row,cell.col,cell.val])
 
-            for j in range(cell.col):
+        sorted_list = sorted(cellList, key=itemgetter(0, 1))  
+
+        currNode = self.head
+        rowNode = currNode
+        previousCol = 0
+        previousRow = 0
+        for i in range(len(sorted_list)):
+
+            rowNum = sorted_list[i][0]
+
+            for j in range(rowNum - previousRow):
+                colNum = 0
+                rowNode = rowNode.down
+                currNode = rowNode
+                previousCol = 0
+
+            colNum = sorted_list[i][1]
+
+            for k in range(colNum - previousCol):
                 currNode = currNode.right
-            currNode.val = cell.val
 
+            currNode.val = sorted_list[i][2]
+            
+            previousCol = colNum
+            previousRow = rowNum  
+
+        
     def appendRow(self):
         """
         Appends an empty row to the spreadsheet.
         """
 
         currNode = self.head
-        for i in range(self.rows-1):
+        while currNode.down.down is not None:
             currNode = currNode.down
 
         currNode.down = ListNode(None)
@@ -133,7 +155,7 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
             if tempUp is not None:
                 tempUp.down = currNode.up
             else:
-                tempUp = ListNode(2)
+                tempUp = ListNode(None)
             currNode = currNode.up
             self.rows +=1
             for j in range(self.cols-1):
@@ -164,21 +186,20 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @param colIndex Index of the existing column that will be before the newly inserted row.  If inserting as first column, specify colIndex to be -1.
         """
 
-        try:
-            rowNode = self.head
-            while rowNode is not None:
-                currNode = rowNode
-                for i in range(colIndex-1):
+        rowNode = self.head
+        while rowNode is not None and rowNode.down is not None:
+            currNode = rowNode
+            for i in range(colIndex-1):
+                if currNode.right is not None:
                     currNode = currNode.right
-                tempLeft = currNode.left
-                currNode.left = ListNode(None)
-                currNode.left.right = currNode
-                if tempLeft is not None:
-                    tempLeft.right = currNode.left
-                rowNode = rowNode.down
-            self.cols +=1
-        except:
-            self.printSheet()
+            tempLeft = currNode.left
+            currNode.left = ListNode(1)
+            currNode.left.right = currNode
+            if tempLeft is not None:
+                tempLeft.right = currNode.left
+            rowNode.val = 2
+            rowNode = rowNode.down
+        self.cols +=1
         return True
 
 
