@@ -28,17 +28,14 @@ class ArraySpreadsheet(BaseSpreadsheet):
         @param lCells: list of cells to be stored
         """           
         
+        # Get Number of rows and columns to generate
         for cell in lCells:
             if cell.row > self.numRows:
                 self.numRows = cell.row + 1
             if cell.col > self.numCols: 
                 self.numCols = cell.col + 1
-
-        self.numRows += 1
-        self.numCols += 1
             
-        #spreadsheet = [[None for i in range(self.numCols)] for j in range(self.numRows)]
- 
+        # Create empty spreadsheet
         for i in range(self.numRows):
             col = []
             for j in range(self.numCols):
@@ -46,13 +43,9 @@ class ArraySpreadsheet(BaseSpreadsheet):
             self.spreadSheet.append(col)
             
         
-        try:
-            for cell in lCells:
-                self.spreadSheet[cell.row][cell.col] = cell.val
-        except BaseException as e:
-            print(e)
-            print(len(self.spreadSheet), self.numRows, len(self.spreadSheet[0]), self.numCols)
-            print("error",cell.row, cell.col)
+        # Insert Values
+        for cell in lCells:
+            self.spreadSheet[cell.row][cell.col] = cell.val
 
 
     def appendRow(self)->bool:
@@ -63,12 +56,13 @@ class ArraySpreadsheet(BaseSpreadsheet):
         """
 
         try:        
+            # Append Empty Row
             self.spreadSheet.append([None for i in range(self.numCols)])
+            # Increase Row Count
             self.numRows += 1 
             return True
         except:
             return False
-
 
     def appendCol(self)->bool:
         """
@@ -77,8 +71,10 @@ class ArraySpreadsheet(BaseSpreadsheet):
         @return True if operation was successful, or False if not.
         """
 
-        try:        
+        try:    
+            # Append Empty Col
             for i in range(self.numRows): self.spreadSheet[i].append(None)  
+            # Increase Col Count
             self.numCols += 1             
             return True      
         except:
@@ -94,13 +90,13 @@ class ArraySpreadsheet(BaseSpreadsheet):
         @return True if operation was successful, or False if not, e.g., rowIndex is invalid.
         """
 
-        try:        
-            if rowIndex > 0:
-                self.spreadSheet.insert(rowIndex, [None for i in range(self.numCols)])
-                self.numRows += 1 
-                return True
-            return False
-        except:
+        if rowIndex >= 0 and rowIndex < self.numRows:
+            # Insert Empty Row
+            self.spreadSheet.insert(rowIndex, [None for i in range(self.numCols)])
+            # Increase Row Count
+            self.numRows += 1 
+            return True
+        else:
             return False
 
 
@@ -112,14 +108,14 @@ class ArraySpreadsheet(BaseSpreadsheet):
 
         return True if operation was successful, or False if not, e.g., colIndex is invalid.
         """
-
-        try:      
-            if colIndex > 0:  
-                for i in range(self.numRows): self.spreadSheet[i].insert(colIndex,None)
-                self.numCols += 1                   
-                return True
-            return False
-        except:
+  
+        if colIndex >= 0 and colIndex < self.numCols:
+            # Insert Empty Col
+            for i in range(self.numRows): self.spreadSheet[i].insert(colIndex,None)
+            # Increase Row Count
+            self.numCols += 1                   
+            return True
+        else:
             return False
 
 
@@ -134,11 +130,10 @@ class ArraySpreadsheet(BaseSpreadsheet):
         @return True if cell can be updated.  False if cannot, e.g., row or column indices do not exist.
         """
 
-        try:     
+        if colIndex >= 0 and colIndex < self.numCols and rowIndex >= 0 and rowIndex < self.numRows:
             self.spreadSheet[rowIndex][colIndex] = value          
             return True
-        
-        except:
+        else:
             return False
 
 
@@ -167,10 +162,12 @@ class ArraySpreadsheet(BaseSpreadsheet):
 	    """
 
         cellList = []
+        # Look through arrays
         for i in range(self.numRows):
             for j in range(self.numCols):
                 currVal = self.spreadSheet[i][j]
                 if currVal == value:
+                    # Add to list to return
                     cellList.append([i,j,currVal])
 
         return cellList
@@ -184,10 +181,12 @@ class ArraySpreadsheet(BaseSpreadsheet):
         """
 
         cellList = []
+        # Look through arrays
         for i in range(self.numRows):
             for j in range(self.numCols):
                 currVal = self.spreadSheet[i][j]
                 if currVal != None:
+                    # Add to list to return
                     cellList.append(Cell(i,j,currVal))
 
         return cellList

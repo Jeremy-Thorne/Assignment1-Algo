@@ -49,36 +49,47 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @param lCells: list of cells to be stored
         """
 
+        # Get Number of rows and columns to generate
         for cell in lCells:
             if cell.row > self.rows: self.rows = cell.row + 1
             if cell.col > self.cols: self.cols = cell.col + 1
 
+        # Create Empty 2D List
         currNode = self.head
+
+        # Make "Vertical" Linked list of rows
         for i in range(self.rows):   
             currNode.down = ListNode(None)
             currColNode = currNode
             currNode.down.up = currNode
             currNode = currNode.down     
-
+            
+            # Make "Horizontal" Linked list of columns attached to rows
             for j in range(self.cols-1):
                 currColNode.right = ListNode(None)
                 currColNode.right.left = currColNode 
                 currColNode = currColNode.right
         
+        # Create List of Cells
         cellList = []
         for cell in lCells:
             cellList.append([cell.row,cell.col,cell.val])
 
+        # Sort List
         sorted_list = sorted(cellList, key=itemgetter(0, 1))  
 
         currNode = self.head
         rowNode = currNode
         previousCol = 0
         previousRow = 0
+
+        # Loop Through List to insert values
+        # Current cell data is store to save time in loop
         for i in range(len(sorted_list)):
 
             rowNum = sorted_list[i][0]
 
+            # Move down to next row value
             for j in range(rowNum - previousRow):
                 colNum = 0
                 rowNode = rowNode.down
@@ -86,12 +97,14 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
                 previousCol = 0
 
             colNum = sorted_list[i][1]
-
+            
+            # Move across to nex col value
             for k in range(colNum - previousCol):
                 currNode = currNode.right
 
             currNode.val = sorted_list[i][2]
             
+            # Store previous cell location
             previousCol = colNum
             previousRow = rowNum  
 
@@ -101,13 +114,14 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         Appends an empty row to the spreadsheet.
         """
 
+        # Move last row and add a head row node
         currNode = self.head
         while currNode.down.down is not None:
             currNode = currNode.down
-
         currNode.down = ListNode(None)
         currNode = currNode.down
 
+        # Add col nodes 
         for j in range(self.cols-1):
             currNode.right = ListNode(None)
             currNode.right.left = currNode
@@ -123,14 +137,20 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         @return True if operation was successful, or False if not.
         """
 
+        
         rowNode = self.head
+
+        # For each row node
         while rowNode is not None:
             currNode = rowNode
+
+            # Traverse to end col node and add one col to right
             while currNode.right is not None:
                 currNode = currNode.right
             currNode.right = ListNode(None)
             currNode.right.left = currNode
             rowNode = rowNode.down
+
         self.cols +=1
         return True
 
@@ -176,8 +196,8 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
                 currNode = currNode.right
             self.rows +=1
             return True
-
-        return False
+        else:
+            return False
 
     def insertCol(self, colIndex: int)->bool:
         """
@@ -185,22 +205,34 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
 
         @param colIndex Index of the existing column that will be before the newly inserted row.  If inserting as first column, specify colIndex to be -1.
         """
+        
+        if colIndex >= 0 and colIndex < self.cols:
+            rowNode = self.head
 
-        rowNode = self.head
-        while rowNode is not None and rowNode.down is not None:
-            currNode = rowNode
-            for i in range(colIndex-1):
-                if currNode.right is not None:
-                    currNode = currNode.right
-            tempLeft = currNode.left
-            currNode.left = ListNode(1)
-            currNode.left.right = currNode
-            if tempLeft is not None:
-                tempLeft.right = currNode.left
-            rowNode.val = 2
-            rowNode = rowNode.down
-        self.cols +=1
-        return True
+            # For each row node
+            while rowNode is not None and rowNode.down is not None:
+                currNode = rowNode
+
+                # Move to colIndex
+                for i in range(colIndex-1):
+                    if currNode.right is not None:
+                        currNode = currNode.right
+
+                # Add node to left of colIndex
+                tempLeft = currNode.left
+                currNode.left = ListNode(None)
+                currNode.left.right = currNode
+
+                # If col index 0
+                if tempLeft is not None:
+                    tempLeft.right = currNode.left
+
+                rowNode = rowNode.down
+
+            self.cols +=1
+            return True
+        else:
+            return False
 
 
     def update(self, rowIndex: int, colIndex: int, value: float) -> bool:
@@ -216,11 +248,16 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
 
         if rowIndex >= 0 and rowIndex < self.rows and colIndex >= 0 and colIndex < self.cols:
             currNode = self.head
+
+            # Goto Node at rowIndex, colIndex
             for i in range(rowIndex):
                 currNode = currNode.down
             for i in range(colIndex):
                 currNode = currNode.right
+            
+            # Update Value
             currNode.val = value
+
             return True
         else:
             return False
@@ -253,16 +290,22 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         
         cellList = []
 
+        isFindCommand = -0.123456789
+
         rowCount = 0
         currRow = self.head
+
+        # Itereate through sheet
         while currRow is not None:
             colCount = 0
             currCol = currRow
+
             while currCol is not None:
-                if currCol.val == value or (value == -0.123456789 and currCol.val is not None):
+                if currCol.val == value or (value == isFindCommand and currCol.val is not None):
                     cellList.append([rowCount,colCount,currCol.val])
                 currCol = currCol.right
                 colCount += 1
+
             currRow = currRow.down
             rowCount += 1
         return cellList
@@ -274,7 +317,9 @@ class LinkedListSpreadsheet(BaseSpreadsheet):
         """
 
         cellList = []
+        numberToIndicateFind = -0.123456789
 
-        for cell in self.find(-0.123456789): cellList.append(Cell(cell[0], cell[1], cell[2]))
+        # Reuse Find Function to save code
+        for cell in self.find(numberToIndicateFind): cellList.append(Cell(cell[0], cell[1], cell[2]))
 
         return cellList
